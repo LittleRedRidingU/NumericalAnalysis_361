@@ -32,23 +32,56 @@ public class Lagrange_basis_functions {
     public static double Polynomial_interpolation(int howManyN, double inputX) {
         double Polynomial_P = 0;
         for(int j = 0; j<howManyN+1; j++) {
-            Polynomial_P = Polynomial_P + fx_formula_using(j)*LBF(j, howManyN, inputX);
+            Polynomial_P = Polynomial_P + fx_formula_using(inputX)*LBF(j, howManyN, inputX);
         }
         return Polynomial_P;
     }
-    public static double fx_formula_using(int x){
-        //test_requirement
-        return Math.exp(x);
+    public static double fx_formula_using(double x){
         //requirement 1
-        //return Math.sin(x);
-        //requirement 2
-        // return 1/(1+Math.pow(x,2));
-        //requirement 3
-        // return 1/(1+Math.pow(x,2));
+            // return Math.sin(Math.PI*x);
+        //requirement 2 & 3
+             return 1/(1+Math.pow(x,2));
     }
+
+    public static double maximumInterpolationError(int howManyN){
+        double Temp, maxErrorRecorder = -1;
+        double[] EquallySpacedArray = intervalEquallySpacedByM();
+       for(int j = 0; j<setM+1; j++){
+            Temp=Math.abs(fx_formula_using(EquallySpacedArray[j])-Polynomial_interpolation(howManyN, EquallySpacedArray[j]));
+            if (Temp>maxErrorRecorder){
+                maxErrorRecorder = Temp;
+            }
+        }
+        return maxErrorRecorder;
+    }
+
+    public static double[] intervalEquallySpacedByM(){
+        double[] EquallySpacedArray = new double[setM+1];
+        double intervalDistance, lowestPoint;
+
+        //requirement 1
+              //  lowestPoint = -1;
+              //  intervalDistance = 2.0/(setM+1); //note: The distance between -1 and 1 is 2
+        //requirement 2
+              lowestPoint = -2;
+              intervalDistance = 4.0/(setM+1); //note: The distance between -2 and 2 is 4
+        //requirement 3
+            // lowestPoint = -5;
+             //intervalDistance = 10.0/(setM+1);  //note: The distance between -5 and 5 is 10
+
+        for(int j = 0; j<EquallySpacedArray.length; j++){
+            if(j==0){
+                EquallySpacedArray[j] = lowestPoint;
+                continue;
+            }
+            lowestPoint = lowestPoint+intervalDistance;
+            EquallySpacedArray[j] = lowestPoint;
+        }
+        return EquallySpacedArray;
+    }
+
     public static void main(String[] args) {
-        double desiredApproximationValue_X = 1.5;
-        int polynomial_interpolation_number_n = setN;
-        System.out.println(Polynomial_interpolation(polynomial_interpolation_number_n, desiredApproximationValue_X));
+        int howManyN = setN;
+        System.out.println("For case n = " + setN +", the approximate maximum interpolation error is: "+maximumInterpolationError(howManyN));
     }
 }
